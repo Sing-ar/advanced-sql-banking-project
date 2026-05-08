@@ -1,0 +1,118 @@
+====================================================
+SQL Functions Used:
+    - Window Ranking Functions: RANK()
+    - CASE: Defines custom segmentation logic.
+    - Date Functions: DATEPART(), FORMAT()
+    - Clauses: GROUP BY, ORDER BY
+====================================================
+
+--Top 5 Customers with the highest Total loan amount--
+
+SELECT
+	*
+FROM (
+SELECT 
+	customer_id,
+	RANK() OVER(ORDER BY SUM(loan_amount) DESC) AS rank_loan,
+	SUM(loan_amount) AS total_loan
+FROM silver.loans
+GROUP BY customer_id
+) AS ranked_loan
+WHERE rank_loan <= 5;
+
+--Customer Credit Score Distribution--
+
+WITH credit_group AS (
+    SELECT 
+        customer_id,
+        CASE
+            WHEN credit_score > 750 THEN 'Excellent'
+            WHEN credit_score BETWEEN 700 AND 749 THEN 'Good'
+            WHEN credit_score BETWEEN 650 AND 699 THEN 'Fair'
+            WHEN credit_score BETWEEN 600 AND 649 THEN 'Poor'
+            ELSE 'Very Poor'
+        END AS credit_score
+    FROM silver.customers
+)
+
+SELECT 
+    credit_score,
+    COUNT(customer_id) AS total_customers,
+    COUNT(customer_id) * 100.0 / SUM(COUNT(customer_id)) OVER () AS percentage
+
+FROM credit_group
+GROUP BY credit_score
+ORDER BY credit_score;
+
+--Compare Credit Scores to Loans Amount--
+
+WITH credit_group AS (
+SELECT *,
+	CASE
+		WHEN credit_score > 750 THEN 'Excellent'
+    WHEN credit_score BETWEEN 700 AND 749 THEN 'Good'
+    WHEN credit_score BETWEEN 650 AND 699 THEN 'Fair'
+    WHEN credit_score BETWEEN 600 AND 649 THEN 'Poor'
+    ELSE 'Very Poor'
+ END AS credit_category
+FROM (
+  SELECT
+  	cu.customer_id,
+  	lo.loan_id,
+  	cu.credit_score,
+  	lo.loan_amount
+  FROM silver.customers cu
+  LEFT JOIN silver.loans lo
+  ON cu.customer_id = lo.customer_id
+  )t
+)
+
+SELECT 
+	credit_category,
+	SUM(loan_amount) AS Total_loan
+FROM credit_group
+GROUP BY credit_category
+ORDER BY SUM(loan_amount) DESC;
+
+--Compare Account Typr to Loans Amount--
+
+WITH account_loan AS (
+SELECT 
+	accu.account_id,
+	accu.customer_id,
+	lo.loan_id,
+	accu.account_type,
+	accu.balance_usd,
+	accu.credit_score,
+	lo.loan_amount
+FROM (
+  SELECT 
+  	ac.account_id,
+  	ac.customer_id,
+  	ac.account_type,
+  	ac.balance_usd,
+  	cu.credit_score
+  FROM silver.accounts ac 
+  LEFT JOIN silver.customers cu
+  ON ac.customer_id = cu.customer_id
+  ) AS accu
+LEFT JOIN silver.loans lo
+ON lo.customer_id = accu.customer_id
+WHERE loan_id IS NOT NULL
+)
+SELECT 
+	account_type,
+	SUM(loan_amount) AS Total_type_loan
+FROM account_loan
+GROUP BY account_type;
+
+--Monthly Loans Amount total--
+
+SELECT 
+	YEAR(start_date) AS year,
+	MONTH(start_date),
+	FORMAT(start_date, 'MMM') AS Month,
+	SUM(loan_amount) AS Total
+FROM silver.loans
+GROUP BY YEAR(start_date), MONTH(start_date), FORMAT(start_date, 'MMM')
+ORDER BY YEAR(start_date), MONTH(start_date)
