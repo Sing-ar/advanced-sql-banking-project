@@ -1,0 +1,104 @@
+-- Check For Nulls and Duplicates
+
+SELECT 
+	account_id,
+	COUNT(account_id)
+FROM bronze.accounts
+GROUP BY account_id
+HAVING COUNT(account_id) > 1 OR account_id IS NULL;
+
+-- Data Standardization & Consistency
+
+SELECT DISTINCT
+	account_type
+FROM bronze.accounts
+
+-- Check For Nulls and Duplicates
+
+SELECT
+	branch_id,
+	COUNT(branch_id)
+FROM bronze.branches
+GROUP BY branch_id
+HAVING COUNT(branch_id) > 1 OR branch_id IS NULL;
+
+-- Check For Space 
+
+SELECT 
+	branch_name
+FROM bronze.branches
+WHERE 	branch_name != TRIM(branch_name);
+
+-- Check For Nulls and Duplicates
+
+SELECT
+	card_id,
+	COUNT(card_id)
+FROM bronze.cards
+GROUP BY card_id
+HAVING COUNT(card_id) > 1 OR card_id IS NULL;
+
+-- Data Standardization & Consistency
+
+SELECT DISTINCT
+	card_type
+FROM bronze.cards;
+
+-- Check For Nulls and Duplicates
+
+SELECT 
+	customer_id,
+	COUNT(customer_id)
+FROM bronze.customers
+GROUP BY customer_id
+HAVING COUNT(customer_id) > 1 OR customer_id IS NULL;
+
+-- Check For Space 
+
+SELECT 
+	city
+FROM bronze.customers
+WHERE 	city != TRIM(city);
+
+-- Check For Validate Email
+
+SELECT 
+	email
+FROM bronze.customers
+WHERE email NOT LIKE '%@%'
+			AND email NOT LIKE '%.com'
+			AND email NOT LIKE '%.net'
+			AND email NOT LIKE '%.org';
+
+-- Check For Nulls and Duplicates
+
+SELECT 
+	loan_id,
+	COUNT(loan_id)
+FROM bronze.loans
+GROUP BY loan_id
+HAVING COUNT(loan_id) > 1 OR loan_id IS NULL;
+
+-- Check For Nulls and Duplicates
+
+SELECT 
+	merchant_id,
+	COUNT(merchant_id)
+FROM bronze.merchants
+GROUP BY merchant_id
+HAVING COUNT(merchant_id) > 1 OR merchant_id IS NULL;
+
+-- Data Standardization & Consistency
+
+SELECT 
+	merchant_name
+FROM bronze.merchants
+WHERE merchant_name LIKE '"%';
+
+-- Check For Space 
+
+SELECT 
+	city
+FROM bronze.merchants
+WHERE 	city != TRIM(city);
+
