@@ -1,0 +1,50 @@
+=================================================
+SQL Functions Used:
+    - Aggregate Functions: SUM(), COUNT(), AVG()
+    - GROUP BY, ORDER BY
+=================================================
+
+--Total Accounts--
+
+SELECT 
+	COUNT(account_id) AS Total_Accounts
+FROM silver.accounts;
+
+--Total Accounts Type Balance--
+
+SELECT 
+	account_type,
+	SUM(balance_usd) AS Total_account_type_balance
+FROM silver.accounts
+GROUP BY account_type 
+ORDER BY SUM(balance_usd) DESC;
+
+--Total Customers--
+
+SELECT 
+	COUNT(customer_id) AS Total_Customers
+FROM silver.customers;
+
+--Average Credit Score--
+
+SELECT 
+	AVG(credit_score) AS Average_Credit_Score
+FROM silver.customers;
+
+--Total Balance (USD)--
+
+SELECT 
+	SUM(balance_usd) AS Total_Balance
+FROM silver.accounts;
+
+--Total Loans--
+
+SELECT 
+	COUNT(loan_id) AS Total_Loans
+FROM silver.loans;
+
+--Total Loan Exposure (USD)--
+
+SELECT 
+	SUM(loan_amount) AS Total_Loans_Exposure
+FROM silver.loans;
