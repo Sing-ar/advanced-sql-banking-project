@@ -1,0 +1,33 @@
+WITH mrc_name AS (
+SELECT
+    merchant_id,
+    REPLACE(merchant_name, '"', '') + ' ' + company_name AS merchant_name,
+    city
+FROM (
+    SELECT
+        merchant_id,
+        merchant_name,
+        TRIM(LEFT(clean_name, NULLIF(CHARINDEX(',', clean_name), 0) - 1)) AS company_name,
+        TRIM(RIGHT(clean_name, LEN(clean_name) - CHARINDEX(',', clean_name))) AS city
+    FROM (
+        SELECT 
+            *,
+            REPLACE(city, '"', '') AS clean_name
+        FROM bronze.merchants      
+       )t
+    )t
+)
+
+
+SELECT 
+    br.merchant_id,
+    
+    CASE 
+        WHEN mr.merchant_name IS NULL THEN br.merchant_name
+        ELSE mr.merchant_name
+    END AS merchant_name,
+
+    mr.city
+FROM mrc_name mr
+LEFT JOIN bronze.merchants br
+ON mr.merchant_id = br.merchant_id;
