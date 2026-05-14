@@ -1,0 +1,146 @@
+# =========================================================
+# Credit Risk Classification using Logistic Regression
+# =========================================================
+
+# Import required libraries
+import pandas as pd
+import matplotlib.pyplot as plt
+
+from sklearn.model_selection import train_test_split
+from sklearn.linear_model import LogisticRegression
+
+from sklearn.metrics import confusion_matrix
+from sklearn.metrics import classification_report
+
+from sklearn.preprocessing import StandardScaler
+from sklearn.decomposition import PCA
+
+# =========================================================
+# Load Dataset
+# =========================================================
+
+# Define dataset columns
+columns = [
+    'customer_id',
+    'credit_score',
+    'account_age',
+    'total_accounts',
+    'total_balance',
+    'avg_balance',
+    'total_cards',
+    'card_per_account',
+    'total_loans',
+    'total_loan_amount',
+    'avg_interest_rate',
+    'debt_ratio'
+]
+
+# Load dataset
+df = pd.read_csv(
+    r"E:\ForDataset\customer_segmentation_dataset.csv",
+    header=None,
+    names=columns
+)
+
+# =========================================================
+# Create Target Variable
+# =========================================================
+
+# Define high-risk customers
+df['risk'] = (
+    (df['debt_ratio'] > 2)
+    &
+    (df['credit_score'] < 600)
+).astype(int)
+
+# =========================================================
+# Feature Selection
+# =========================================================
+
+# Features
+X = df.drop(columns=['customer_id', 'risk'])
+
+# Target variable
+y = df['risk']
+
+# =========================================================
+# Feature Scaling
+# =========================================================
+
+# Standardize features
+scaler = StandardScaler()
+X_scaled = scaler.fit_transform(X)
+
+# =========================================================
+# Train-Test Split
+# =========================================================
+
+# Split dataset into training and testing sets
+X_train, X_test, y_train, y_test = train_test_split(
+    X_scaled,
+    y,
+    test_size=0.2,
+    random_state=0
+)
+
+# =========================================================
+# Model Training
+# =========================================================
+
+# Initialize Logistic Regression model
+logreg = LogisticRegression()
+logreg.fit(X_train, y_train)
+
+# =========================================================
+# Prediction
+# =========================================================
+
+# Predict test dataset
+y_pred = logreg.predict(X_test)
+
+# =========================================================
+# Model Evaluation
+# =========================================================
+
+# Confusion Matrix
+print("Confusion Matrix:")
+print(confusion_matrix(y_test, y_pred))
+
+# Classification Report
+print("\nClassification Report:")
+print(classification_report(y_test, y_pred))
+
+# =========================================================
+# PCA Visualization
+# =========================================================
+
+# Reduce features to 2 dimensions for visualization
+pca = PCA(n_components = 2)
+X_pca = pca.fit_transform(X_scaled)
+
+# Define colors
+# Blue = Low Risk
+# Red = High Risk
+
+colors = [
+    'blue' if label == 0 
+     else 'red'
+     for label in y
+]
+
+plt.figure(figsize=(8, 6))
+plt.scatter(
+    X_pca[:, 0],
+    X_pca[:, 1],
+    c=colors,
+    alpha=0.7
+)
+
+# Graph labels
+
+plt.xlabel('PCA Component 1')
+plt.ylabel('PCA Component 2')
+
+plt.title('Credit Risk Classification')
+
+plt.show()
