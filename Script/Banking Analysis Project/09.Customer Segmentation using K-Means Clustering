@@ -1,0 +1,151 @@
+# =========================================================
+# Customer Segmentation using K-Means Clustering
+# =========================================================
+
+# Import required libraries
+import pandas as pd
+import matplotlib.pyplot as plt
+
+from sklearn.cluster import KMeans
+from sklearn.preprocessing import StandardScaler
+from sklearn.decomposition import PCA
+
+# =========================================================
+# Load Dataset
+# =========================================================
+
+# Define column names
+cols = [
+    'customer_id',
+    'credit_score',
+    'account_age',
+    'total_accounts',
+    'total_balance',
+    'avg_balance',
+    'total_cards',
+    'card_per_account',
+    'total_loans',
+    'total_loan_amount',
+    'avg_interest_rate',
+    'debt_ratio'
+]
+
+# Load dataset
+df = pd.read_csv(
+    r"E:\ForDataset\customer_segmentation_dataset.csv",
+    header = None,
+    names = cols
+)
+
+# Preview dataset
+print(df.head())
+
+# =========================================================
+# Feature Selection
+# =========================================================
+
+# Select features
+X = df.iloc[:, 1:]
+
+# =========================================================
+# Feature Scaling
+# =========================================================
+
+# Standardize features before clustering
+scaler = StandardScaler()
+X_scaled = scaler.fit_transform(X)
+
+# =========================================================
+# Elbow Method
+# =========================================================
+
+# Find optimal number of clusters
+inertia = []
+for k in range(1, 11):
+
+    model = KMeans(
+        n_clusters=k,
+        random_state=0,
+        n_init=20
+    )
+
+    model.fit(X_scaled)
+
+    inertia.append(model.inertia_)
+
+# Plot Elbow Metho
+plt.figure(figsize=(8, 6))
+
+plt.plot(
+    range(1, 11),
+    inertia,
+    marker='o'
+)
+
+plt.title('Elbow Method')
+plt.xlabel('Number of Clusters')
+plt.ylabel('Inertia')
+plt.show()
+
+# =========================================================
+# K-Means Clustering
+# =========================================================
+
+# Define number of clusters
+n_clusters = 4
+
+# Initialize model
+kmeans = KMeans(
+    n_clusters=n_clusters,
+    random_state=0,
+    n_init=20
+)
+
+# Train model
+kmeans.fit(X_scaled)
+
+# Predicted cluster labels
+labels = kmeans.labels_
+print(f'Labels: {labels}')
+
+# =========================================================
+# PCA for Visualization
+# =========================================================
+
+# Reduce dimensions from multiple features to 2 components
+pca = PCA(n_components=2)
+X_pca = pca.fit_transform(X_scaled)
+
+# Create visualization
+colors = ['red', 'blue', 'green', 'purple']
+for i in range(n_clusters):
+
+    plt.scatter(
+        X_pca[labels == i, 0],
+        X_pca[labels == i, 1],
+        s = 50,
+        c = colors[i],
+        label = f'Cluster {i + 1}'
+    )
+
+plt.xlabel('PCA Component 1')
+plt.ylabel('PCA Component 2')
+plt.title('Customer Segmentation')
+plt.legend()
+plt.show()
+
+# =========================================================
+# Cluster Analysis
+# =========================================================
+
+# Summary statistics for each cluster
+df['cluster'] = labels
+cluster_summary = df.groupby('cluster').mean(numeric_only=True)
+pd.set_option('display.max_columns', None)
+print(cluster_summary.to_string())
+
+
+
+
+
+
