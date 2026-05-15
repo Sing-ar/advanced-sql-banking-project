@@ -1,0 +1,62 @@
+==================================================
+--> Prepare Data for use in Machine Learning <--
+==================================================
+
+WITH account_total AS (
+SELECT
+    customer_id,
+    COUNT(account_id) AS total_accounts,
+    SUM(balance_usd) AS total_balance,
+    AVG(balance_usd) AS avg_balance,
+    DATEDIFF(YEAR, MIN(open_date), GETDATE()) AS account_age
+FROM silver.accounts
+GROUP BY customer_id
+),
+
+card_total AS (
+SELECT
+    a.customer_id,
+    COUNT(cd.card_id) AS total_cards
+FROM silver.accounts a
+LEFT JOIN silver.cards cd
+ON a.account_id = cd.account_id
+GROUP BY a.customer_id
+),
+
+loan_total AS (
+SELECT
+    customer_id,
+    COUNT(loan_id) AS total_loans,
+    SUM(loan_amount) AS total_loan_amount,
+    AVG(interest_rate) AS avg_interest_rate
+FROM silver.loans
+GROUP BY customer_id
+)
+
+SELECT
+ cu.customer_id,
+ cu.credit_score,
+ COALESCE(account_age, 0) AS account_age,
+ COALESCE(total_accounts, 0) AS total_accounts,
+ COALESCE(total_balance, 0) AS total_balance,
+ COALESCE(avg_balance, 0) AS avg_balance,
+ COALESCE(total_cards, 0) AS total_cards,
+ COALESCE(CAST(total_cards AS FLOAT)/ NULLIF(total_accounts, 0),0) AS card_per_account,
+ COALESCE(total_loans, 0) AS total_loans,
+ COALESCE(total_loan_amount, 0) AS total_loan_amount,
+ COALESCE(avg_interest_rate, 0) AS avg_interest_rate,
+ COALESCE(CAST(total_loan_amount AS FLOAT)/ NULLIF(total_balance, 0),0) AS debt_ratio
+
+===============================================
+--> Create New Table <--
+===============================================
+
+INTO gold.customer_segmentation_dataset
+
+FROM silver.customers cu
+LEFT JOIN account_total act
+ON cu.customer_id = act.customer_id
+LEFT JOIN card_total cat
+ON cu.customer_id = cat.customer_id
+LEFT JOIN loan_total lot
+ON cu.customer_id = lot.customer_id
