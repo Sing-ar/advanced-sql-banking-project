@@ -102,6 +102,7 @@ Potential customer groups identified:
   - Cluster 3: Low Balance Loan
 
 
+
 Result Elbow Method Analyst:
 
   <img width="640" height="480" alt="Figure_3" src="https://github.com/user-attachments/assets/136bef4d-2778-4fef-a411-74ee62301e4c" />
@@ -113,6 +114,8 @@ Result K-Means Customer Segmentation:
   <img width="640" height="480" alt="Figure_1" src="https://github.com/user-attachments/assets/bc4c8934-7805-4653-a764-c438cba92019" />
 
    
+
+
 
   
 - Credit Risk Classification
