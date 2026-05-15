@@ -23,8 +23,7 @@ The dataset includes:
 - Credit Scores
 
 **Tools & Technologies**
-- SQL & Database
-- SQL Server
+- MSSQL
 - Python & Machine Learning
 - Python
 - Pandas
@@ -102,9 +101,6 @@ Potential customer groups identified:
   - Cluster 4: Low Balance Loan
 
 
-
-
-
   <img width="640" height="480" alt="Figure_3" src="https://github.com/user-attachments/assets/136bef4d-2778-4fef-a411-74ee62301e4c" />
   
 Result Elbow Method Analyst
@@ -113,6 +109,7 @@ Result Elbow Method Analyst
 
 
   <img width="640" height="480" alt="Figure_1" src="https://github.com/user-attachments/assets/bc4c8934-7805-4653-a764-c438cba92019" />
+  
 Result K-Means Customer Segmentation
    
 
