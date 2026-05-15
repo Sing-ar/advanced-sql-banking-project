@@ -100,16 +100,13 @@ Potential customer groups identified:
   - Cluster 1: High Risk Borrowers
   - Cluster 2: High Value Active
   - Cluster 3: Low Balance Loan
-    
-  'Cluster', 'credit_score'  'total_balance'  'total_cards'  'total_loan_amount'  'debt_ratio
-    0         576.007989      148493.512007    1.804661       2212.154337          0.024036
-    1         574.209383      165612.404304    2.131048       225336.992317        5.195643
-    2         572.876985      366261.294083    5.409873       48917.447605         0.140131
-    3         573.727198      3315.968862      0.031219       84168.936789         0.541809
 
-  <img width="640" height="480" alt="Figure_1" src="https://github.com/user-attachments/assets/bc4c8934-7805-4653-a764-c438cba92019" />
+  <img width="800" height="600" alt="Figure_3" src="https://github.com/user-attachments/assets/136bef4d-2778-4fef-a411-74ee62301e4c" />
+  Result Elbow Method Analyst
   
+  <img width="640" height="480" alt="Figure_1" src="https://github.com/user-attachments/assets/bc4c8934-7805-4653-a764-c438cba92019" />
   Result K-Means Customer Segmentation
+
   
 - Credit Risk Classification
 
