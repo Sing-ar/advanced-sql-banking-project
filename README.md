@@ -100,6 +100,15 @@ Potential customer groups identified:
   - Loan-focused customers
   - Low-engagement customers
   - Higher-risk financial profiles
+
+  <img width="640" height="480" alt="Figure_1" src="https://github.com/user-attachments/assets/bc4c8934-7805-4653-a764-c438cba92019" />
+  
+    0: 'Premium Low Risk',
+    1: 'High Risk Borrowers',
+    2: 'High Value Active',
+    3: 'Low Balance Loan'
+
+  Result K-Means Customer Segmentation
   
 - Credit Risk Classification
 
