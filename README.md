@@ -96,23 +96,24 @@ Analyzed loan activity, loan amounts, and debt-related behavior.
 - K-Means Customer Segmentation
 Segmented customers into clusters based on financial behavior patterns.
 Potential customer groups identified:
-  - Cluster 0: Premium Low Risk
-  - Cluster 1: High Risk Borrowers
-  - Cluster 2: High Value Active
-  - Cluster 3: Low Balance Loan
+  - Cluster 1: Premium Low Risk
+  - Cluster 2: High Risk Borrowers
+  - Cluster 3: High Value Active
+  - Cluster 4: Low Balance Loan
 
 
 
-Result Elbow Method Analyst:
+
 
   <img width="640" height="480" alt="Figure_3" src="https://github.com/user-attachments/assets/136bef4d-2778-4fef-a411-74ee62301e4c" />
-
+  
+Result Elbow Method Analyst
   
 
-Result K-Means Customer Segmentation:
+
 
   <img width="640" height="480" alt="Figure_1" src="https://github.com/user-attachments/assets/bc4c8934-7805-4653-a764-c438cba92019" />
-
+Result K-Means Customer Segmentation
    
 
 
